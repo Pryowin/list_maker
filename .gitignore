@@ -1,0 +1,7 @@
+.venv/
+.vscode/
+__pycache__/
+.env
+connections.db
+connections.db-journal
+logs/
