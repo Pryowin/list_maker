@@ -14,6 +14,7 @@ from config.routes import config_api
 from users.routes import user_api
 from password.routes import password_api
 
+from cli import db_create, db_drop, db_seed
 
 app = Flask(__name__)
 load_dotenv()
@@ -27,6 +28,11 @@ config_logging(basedir)
 # Database config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'connections.db')
 db.init_app(app)
+
+#Commands
+app.cli.add_command(db_create)
+app.cli.add_command(db_drop)
+app.cli.add_command(db_seed)
 
 # Routes
 @app.route('/')

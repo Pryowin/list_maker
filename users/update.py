@@ -1,7 +1,7 @@
 from flask import Flask
 
 from application.methods import read_field_from_request
-from users.methods import is_valid_date,is_user_old_enough,change_to_date, is_valid_postal_code, is_invalid_email
+from users.methods import is_valid_date,is_user_old_enough,change_to_date, is_invalid_email
 from config.methods import is_valid_country, is_valid_region
 from application.constants import NOT_AUTHORIZED,INCORRECT_DATA,MIN_AGE
 
