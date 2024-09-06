@@ -43,12 +43,6 @@ def create(db,request):
                 first_name = read_field_from_request(request, 'first_name'),
                 last_name = read_field_from_request(request, 'last_name'),
                 email = read_field_from_request(request,'email'),
-                address_1 = read_field_from_request(request,'address_1'),
-                address_2 = read_field_from_request(request,'address_2'),
-                city = read_field_from_request(request, 'city'),
-                state = read_field_from_request(request,'state'),
-                country = read_field_from_request(request, 'country'),
-                zip = read_field_from_request(request, 'zip'),
                 phone = phone_unformatted,
                 password = encrypt(read_field_from_request(request, 'password')),
                 date_of_birth = change_to_date(read_field_from_request(request, 'date_of_birth'))

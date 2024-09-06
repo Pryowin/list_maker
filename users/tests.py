@@ -38,19 +38,6 @@ class TestUserMethods(unittest.TestCase):
         self.assertTrue(is_valid_date('1965-01-12'))
         self.assertFalse(is_valid_date('1965-02-29'))
         
-    def test_is_valid_zip_US(self):
-        self.assertTrue(is_valid_postal_code('27376', "USA"))
-        self.assertFalse(is_valid_postal_code('273761',"USA"))
-        self.assertFalse(is_valid_postal_code('27A76', "USA"))
-        
-    def test_is_valid_zip_CAN(self):
-        self.assertTrue(is_valid_postal_code('L1A 9L9', "CAN"))
-        self.assertFalse(is_valid_postal_code('27376',"CAN"))
-        self.assertFalse(is_valid_postal_code('W1A 9L9', "CAN"))
-        self.assertFalse(is_valid_postal_code('L1A9L9', "CAN"))
-        self.assertFalse(is_valid_postal_code('L1A 9I9', "CAN"))
-    
-        
     def test_is_invalid_email(self):
         self.assertTrue(is_invalid_email('david.co.uk'))
         self.assertTrue(is_invalid_email('david@co'))

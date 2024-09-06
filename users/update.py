@@ -21,26 +21,6 @@ def update(db, request, user):
     if date_of_birth is not None:
         user.date_of_birth = change_to_date(date_of_birth)
         
-    address_1 = read_field_from_request(request, 'address_1')
-    if address_1 is not None:
-        user.address_1 = address_1
-        
-    address_2 = request.form.get('address_2', None)
-    if address_2 is not None:
-        user.address_2 = address_2
-        
-    city = request.form.get('city', None)
-    if city is not None:
-        user.city = city
-        
-    state = request.form.get('state', None)
-    if state is not None:
-        user.state = state
-        
-    zip = request.form.get('zip', None)
-    if zip is not None:
-        user.zip = zip
-        
     db.session.commit()
     
 def validate(request, is_create=False) -> dict:

@@ -29,11 +29,7 @@ def create_app():
                          last_name='Burke',
                          date_of_birth= date(1965,1,12),
                          email='test@test.com',
-                         phone='9106261234',
-                         address_1='635 Burning Tree Rd',
-                         city='Pinehurst',
-                         state='NC',
-                         zip='27376'
+                         phone='9106261234'
                         )
 
         db.session.add(test_user)

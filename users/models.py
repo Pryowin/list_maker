@@ -18,18 +18,12 @@ class User(db.Model):
     last_name = Column(String(20), nullable=False)
     date_of_birth = Column(Date, nullable=False)
     email = Column(String(50), nullable=False, unique=True)
-    phone = Column(String(20), nullable=False, unique=True)
-    address_1 = Column( String(50), nullable=False)
-    address_2 = Column( String(50))
-    city = Column(String(50),nullable=False)
-    state = Column(String(2),nullable=False)
-    country = Column(String(3), default='USA')
-    zip = Column(String(10),nullable=False)
+    status = Column(String(1), nullable=False, default='P')
     created_at = Column(DateTime,server_default=func.now(datetime.UTC))
     updated_at = Column(DateTime,onupdate=datetime.datetime.now(datetime.UTC))
     
     
-required=('user_name', 'password', 'first_name', 'last_name', 'date_of_birth', 'email','phone', 'address_1', 'city', 'state', 'zip')
+required=('user_name', 'password', 'first_name', 'last_name', 'date_of_birth', 'email')
 unique=('user_name', 'email','phone')
 
 class Token(db.Model):
@@ -51,7 +45,7 @@ class CodeSchema(ma.Schema):
 class UserSchema(ma.Schema):
     class Meta:
         fields = ('user_id','user_name','password','first_name','last_name','date_of_birth','email','phone',
-                  'address_1','address_2','city','state','zip','country', 'created_at', 'updated_at')
+                  'status', 'created_at', 'updated_at')
         
 user_schema = UserSchema()
         

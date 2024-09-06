@@ -59,15 +59,7 @@ def is_valid_date(date_string)->bool:
     
 def  change_to_date(date_string: str) -> date:
     return dt.strptime(date_string, "%Y-%m-%d")
-
-def is_valid_postal_code(postal_code: str, country: str) -> bool:
-    if country == "USA":
-        pattern = r'^\d{5}$'
-    else:
-        # Canada
-        pattern = r'^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] [0-9][A-Z][0-9]$'
          
-    return re.match(pattern, postal_code) is not None
 
 def is_invalid_email(email: str) -> bool:
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
