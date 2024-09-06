@@ -4,7 +4,7 @@ from datetime import datetime, timedelta,date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from users.methods import generate_confirmation_code, has_code_expired, is_user_old_enough,is_valid_date, is_valid_postal_code, is_invalid_email
+from users.methods import generate_confirmation_code, has_code_expired, is_user_old_enough,is_valid_date,  is_invalid_email
 from users.models import db,Token
 from application.constants import MIN_AGE
 
