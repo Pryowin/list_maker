@@ -5,7 +5,7 @@ from datetime import datetime as dt
 
 def config_logging(basedir):
     date_str = dt.now().strftime("%Y-%m-%d")
-    log_name = f"connections{date_str}.log"
+    log_name = f"list_maker{date_str}.log"
 
     logging.basicConfig(
         filename=os.path.join(basedir, 'logs///', log_name),  # File name

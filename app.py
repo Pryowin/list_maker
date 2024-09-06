@@ -26,7 +26,7 @@ mail = config_mail_server(app,Mail)
 config_logging(basedir)
 
 # Database config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'connections.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'list_maker.db')
 db.init_app(app)
 
 #Commands

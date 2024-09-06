@@ -14,14 +14,14 @@ password_api = Blueprint('password_api', __name__)
 @password_api.route('/get_token',methods=['POST'])
 def get_token():
     password = read_field_from_request(request,'password')
-    user_name = read_field_from_request(request,'user_name')
+    email = read_field_from_request(request,'email')
     
-    user = User.query.filter_by(user_name=user_name).first()
+    user = User.query.filter_by(email=email).first()
     
     if user:
         if verify(password, user.password):
-             token = create_access_token(user.user_name,fresh=True)
-             refresh_token = create_refresh_token(user.user_name)
+             token = create_access_token(user.email,fresh=True)
+             refresh_token = create_refresh_token(user.email)
              write_token(refresh_token)
              return jsonify(message='Token provided', access_token = token, refresh_token = refresh_token)
          
@@ -41,7 +41,7 @@ def refresh_token():
 @password_api.route('/update_password',methods=['POST'])
 @jwt_required()
 def update_password():
-    user_name = read_field_from_request(request,'user_name')
+    email = read_field_from_request(request,'email')
     old_password = read_field_from_request(request,'old_password')
     new_password = read_field_from_request(request,'new_password')
     new_password_retyped = read_field_from_request(request,'new_password_retyped')
@@ -49,10 +49,10 @@ def update_password():
     if new_password != new_password_retyped:
         return jsonify(message = 'New Passwords do not match.'), INCORRECT_DATA
     
-    if get_jwt_identity() != user_name:
+    if get_jwt_identity() != email:
         return jsonify(message = "Not authorized"), NOT_AUTHORIZED
     
-    user = User.query.filter_by(user_name=user_name).first()
+    user = User.query.filter_by(email=email).first()
     
     if not user:
         return jsonify(message = BAD_PWD_USER), NOT_AUTHORIZED

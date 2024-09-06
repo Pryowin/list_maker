@@ -2,6 +2,6 @@
 .vscode/
 __pycache__/
 .env
-connections.db
-connections.db-journal
+*.db
+*.db-journal
 logs/

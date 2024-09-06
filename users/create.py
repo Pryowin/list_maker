@@ -34,16 +34,13 @@ def check_uniqueness(request):
         return {"ok": False, "errors": errors}
     
 def create(db,request):
-    
-    phone_formatted = read_field_from_request(request, 'phone')
-    phone_unformatted = ''.join([char for char in phone_formatted if char.isdigit()])
+
     
     user = User(
                 user_name = read_field_from_request(request, 'user_name'),
                 first_name = read_field_from_request(request, 'first_name'),
                 last_name = read_field_from_request(request, 'last_name'),
                 email = read_field_from_request(request,'email'),
-                phone = phone_unformatted,
                 password = encrypt(read_field_from_request(request, 'password')),
                 date_of_birth = change_to_date(read_field_from_request(request, 'date_of_birth'))
                 )    

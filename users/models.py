@@ -24,7 +24,7 @@ class User(db.Model):
     
     
 required=('user_name', 'password', 'first_name', 'last_name', 'date_of_birth', 'email')
-unique=('user_name', 'email','phone')
+unique=('user_name', 'email')
 
 class Token(db.Model):
     __tablename__ = 'tokens'

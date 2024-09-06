@@ -33,31 +33,12 @@ def validate(request, is_create=False) -> dict:
                 return {"ok": False, "message": f"Must be at least {MIN_AGE} years old to register.", "http_status": NOT_AUTHORIZED} 
         else:
             return {"ok": False, "message": f"'{possible_date_of_birth}' is not a valid date.", "http_status": INCORRECT_DATA} 
-    
-    
-    zip = read_field_from_request(request, 'zip')
-    country = read_field_from_request(request, 'country')
-    if zip:
-        if is_valid_postal_code(zip, country) == False:
-            return {"ok": False, "message": f"'{zip}' is not a valid postal code.", "http_status": INCORRECT_DATA} 
-        
-    if country:
-        if is_valid_country(country) == False:
-            return {"ok": False, "message": f"'{country}' is not available in this app", "http_status": INCORRECT_DATA}
-    
-    region = read_field_from_request(request, 'state')
-    if region:
-        if is_valid_region(country, region) == False:
-            return {"ok": False, "message": f"'{region}' is not valid for {country}", "http_status": INCORRECT_DATA}
+
     
     if is_create:
         email = read_field_from_request(request,'email')
         if is_invalid_email(email):
             return {"ok": False, "message": f"'{email}' is not a valid email address.", "http_status": INCORRECT_DATA} 
-        phone = read_field_from_request(request,'phone')
-        phone_unformatted = ''.join([char for char in phone if char.isdigit()])
-        if len(phone_unformatted) != 10:
-            return {"ok": False, "message": f"'{phone}' is not a valid phone number.", "http_status": INCORRECT_DATA} 
         password = read_field_from_request(request,'password')
         password_confirm = read_field_from_request(request,'password_confirm')
         if password != password_confirm:

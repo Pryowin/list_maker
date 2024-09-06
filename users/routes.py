@@ -11,7 +11,7 @@ from users.models import db,User, UserSchema
 from users.methods import delete_code,write_code,generate_confirmation_code,is_ok_to_issue_code
 from users.update import update, validate
 from users.create import check_required_fields, check_uniqueness, create
-from users.read import format_for_read
+
 
 # Mail server config
 app = Flask(__name__)
@@ -46,10 +46,10 @@ def create_user():
 @user_api.route('/read_user', methods=['GET'])
 @jwt_required()
 def read_user():
-    user_name = read_field_from_request(request, 'user_name')
-    if get_jwt_identity() != user_name:
+    email = read_field_from_request(request, 'email')
+    if get_jwt_identity() != email:
         return jsonify(message = "Not authorized to access this user."), NOT_AUTHORIZED
-    user = User.query.filter_by(user_name=user_name).first()
+    user = User.query.filter_by(email=email).first()
     if user:
         schema = UserSchema(exclude=("password","created_at", "updated_at"))
         unformatted_result = schema.dump(user)
@@ -68,8 +68,8 @@ def update_user():
     if not user:
         return jsonify(message = "User not found"), NOT_FOUND
     
-    if get_jwt_identity() != user.user_name:
-        app.logger.info(f"Server expects '{get_jwt_identity()}' API supplied '{user.user_name}'")
+    if get_jwt_identity() != user.email:
+        app.logger.info(f"Server expects '{get_jwt_identity()}' API supplied '{user.email}'")
         return jsonify(message = "Not authorized to update this user."), NOT_AUTHORIZED
         
     validate_result = validate(request)
