@@ -10,7 +10,7 @@ def config_logging(basedir):
     logging.basicConfig(
         filename=os.path.join(basedir, 'logs///', log_name),  # File name
         filemode='a',            # append to log if it exists
-        format='%(asctime)s - %(levelname)s - %(message)s',  # Log format
+        format='%(asctime)s | %(levelname)s | %(message)s',  # Log format
         datefmt='%Y-%m-%d %H:%M:%S',  # Date format
         level=logging.DEBUG      # Log level
     )
