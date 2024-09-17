@@ -5,9 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, ForeignKey, func
 from sqlalchemy import  Integer, String, DateTime
 from sqlalchemy.orm import relationship
-from flask_marshmallow import Marshmallow
 
-from users.models import db,User
+from users.models import db,ma,User
 
 
 class Category(db.Model):
@@ -47,3 +46,8 @@ class ListItem(db.Model):
     
 list = relationship(ListHeader, back_populates='list_id')
     
+class CategorySchema(ma.Schema):
+    class Meta:
+        fields = ('created_by','category_name')
+        
+category_schema = CategorySchema(many=True)

@@ -13,6 +13,7 @@ from users.models import db
 from config.routes import config_api
 from users.routes import user_api
 from password.routes import password_api
+from lists.categories.routes import category_api
 
 from cli import db_create, db_drop, db_seed
 
@@ -43,6 +44,7 @@ def hello():
 app.register_blueprint(user_api)
 app.register_blueprint(password_api)
 app.register_blueprint(config_api)
+app.register_blueprint(category_api)
 
 if __name__ == '__main__':
     app.run(debug=True) 

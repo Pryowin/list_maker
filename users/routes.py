@@ -52,8 +52,7 @@ def read_user():
     user = User.query.filter_by(email=email).first()
     if user:
         schema = UserSchema(exclude=("password","created_at", "updated_at"))
-        unformatted_result = schema.dump(user)
-        result = format_for_read(unformatted_result)
+        result = schema.dump(user)
         return result
     else:
         return jsonify(message = "User not found"), NOT_FOUND

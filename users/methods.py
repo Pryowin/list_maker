@@ -24,7 +24,7 @@ def delete_code(email: str):
     db.session.delete(code)
     db.session.commit()
 
-def generate_confirmation_code() -> str:
+def generate_confirmation_code() -> str: 
     return str(random.randint(100000,999999))
 
 def is_ok_to_issue_code(email: str) -> dict:
