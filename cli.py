@@ -1,8 +1,9 @@
 import click
 from flask.cli import with_appcontext
-from users.models import db, User
-from password.methods import encrypt
 from datetime import date
+from users.models import User
+from lists.models import db,Category
+from password.methods import encrypt
 
 @click.command('db_create')
 @with_appcontext
@@ -19,7 +20,7 @@ def db_drop():
 @click.command('db_seed')
 @with_appcontext
 def db_seed():
-    test_user = User(user_name='Pyrowin',
+    test_user = User(user_name='admin',
                      password=encrypt('P@ssw0rd'),
                      first_name='David',
                      last_name='Burke',
@@ -28,4 +29,13 @@ def db_seed():
                      )
     db.session.add(test_user)
     db.session.commit()
+    
+    categories = ['Books', 'Films', 'Music', 'Miscellaneous', 'Places','Sport', 'TV']
+    for category in categories:
+        init_category = Category(created_by=1, category_name = category)
+        db.session.add(init_category)
+        
+    db.session.commit()
     print('Database seeded')
+    
+    

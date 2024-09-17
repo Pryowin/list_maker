@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, DateTime,Date,Boolean,func
+from sqlalchemy.orm import relationship
 from flask_marshmallow import Marshmallow
 
 import datetime
@@ -22,7 +23,9 @@ class User(db.Model):
     created_at = Column(DateTime,server_default=func.now(datetime.UTC))
     updated_at = Column(DateTime,onupdate=datetime.datetime.now(datetime.UTC))
     
-    
+categories = relationship('Category', back_populates='category_creator')
+lists_created_by = relationship(User, back_populates='list_created_by')
+
 required=('user_name', 'password', 'first_name', 'last_name', 'date_of_birth', 'email')
 unique=('user_name', 'email')
 
