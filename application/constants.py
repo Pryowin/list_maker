@@ -19,3 +19,4 @@ PWD_NOT_VALID = "Password must be between 8 and 32 characters and contain at lea
 
 #Other Constants
 MIN_AGE = 18
+ADMIN_USER = 1
