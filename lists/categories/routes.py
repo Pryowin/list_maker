@@ -27,7 +27,6 @@ def read_categories():
     else:
         categories = Category.query.filter((Category.created_by == ADMIN_USER) | (Category.created_by == user_id)).order_by(Category.category_name).all()
     
-    print(categories)
     schema = CategorySchema(many=True)        
     return schema.dump(categories)
 
