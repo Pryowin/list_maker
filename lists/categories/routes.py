@@ -3,7 +3,7 @@ import os
 from flask import Flask,jsonify,request, Blueprint
 from flask_jwt_extended import jwt_required,get_jwt_identity
 
-from application.constants import ADMIN_USER, INCORRECT_DATA, NOT_AUTHORIZED, RECORD_ADDED
+from application.constants import ADMIN_USER, INCORRECT_DATA, NOT_AUTHORIZED, NOT_FOUND, OK, RECORD_ADDED
 from application.methods import read_field_from_request
 from lists.models import Category, CategorySchema
 from users.models import db, User
@@ -50,7 +50,30 @@ def create_category():
     db.session.add(category)    
     db.session.commit()
     return jsonify(message = "Category added"), RECORD_ADDED
+
+@category_api.route('/lists/categories/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_category(id):
+    current_user = get_jwt_identity()
+    if not current_user:
+        return jsonify(message = "Not authorized to delete category."), NOT_AUTHORIZED
     
+    user = User.query.filter_by(email=current_user).first()
+    if not user:
+        return jsonify(message = "Not authorized to delete category."), NOT_AUTHORIZED
+    
+
+    user_id = user.user_id
+    category = Category.query.filter_by(category_id = id).first()
+    if not category:
+        return jsonify(message = "Category " + str(id) + " does not exist"), NOT_FOUND
+    
+    if category.created_by != user_id:
+        return jsonify(message = "Not authorized to delete category."), NOT_AUTHORIZED
+
+    db.session.delete(category)
+    db.session.commit()
+    return jsonify(message = "Category '"+ category.category_name +"' deleted"), OK
         
         
 

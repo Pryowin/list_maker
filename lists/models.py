@@ -48,6 +48,6 @@ list = relationship(ListHeader, back_populates='list_id')
     
 class CategorySchema(ma.Schema):
     class Meta:
-        fields = ('created_by','category_name')
+        fields = ('category_id','created_by','category_name')
         
 category_schema = CategorySchema(many=True)
