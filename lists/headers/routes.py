@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required,get_jwt_identity
 
 from application.constants import ADMIN_USER, INCORRECT_DATA, NOT_AUTHORIZED, NOT_FOUND, OK, RECORD_ADDED
 from application.methods import read_field_from_request
+from lists.headers.validations import is_list_definition_valid
 from lists.models import Category, CategorySchema,ListHeader
 from users.models import db, User
 
@@ -31,15 +32,15 @@ def create_header():
     
     if list_category is None:
         return jsonify(message = "List Category is a required field"), INCORRECT_DATA
-    
-    if list_definition is None:
-        return jsonify(message = "List Definition is a required field"), INCORRECT_DATA
-    
     if type(list_category) != int:
         return jsonify(message = "List Category must be an integer"), INCORRECT_DATA
     
+    if list_definition is None:
+        return jsonify(message = "List Definition is a required field"), INCORRECT_DATA
     if type(list_definition) != dict:
-        return jsonify(message = "List Category must be a dictionary"), INCORRECT_DATA
+        return jsonify(message = "List Definition must be a dictionary"), INCORRECT_DATA
+    if not is_list_definition_valid(list_definition):
+        return jsonify(message = "Invalid List Definition"), INCORRECT_DATA
     
     header = ListHeader(list_name = list_name, 
                         list_category = list_category, 
