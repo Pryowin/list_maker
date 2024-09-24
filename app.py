@@ -14,6 +14,7 @@ from config.routes import config_api
 from users.routes import user_api
 from password.routes import password_api
 from lists.categories.routes import category_api
+from lists.headers.routes import header_api
 
 from cli import db_create, db_drop, db_seed
 
@@ -45,6 +46,7 @@ app.register_blueprint(user_api)
 app.register_blueprint(password_api)
 app.register_blueprint(config_api)
 app.register_blueprint(category_api)
+app.register_blueprint(header_api)
 
 if __name__ == '__main__':
     app.run(debug=True) 

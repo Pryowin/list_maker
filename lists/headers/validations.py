@@ -32,4 +32,5 @@ def is_category_valid(user_id: int, category_id: int) -> bool:
         return True
     
     return False
+
     

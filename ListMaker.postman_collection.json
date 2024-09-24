@@ -1,0 +1,2744 @@
+{
+	"info": {
+		"_postman_id": "4818b5eb-f169-4f07-9eab-7f355d5ae3c1",
+		"name": "ListMaker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37421981"
+	},
+	"item": [
+		{
+			"name": "Refresh Token",
+			"item": [
+				{
+					"name": "Get Token and extract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AuthToken\", jsonData.refresh_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "Pyrowin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Message confirms Refresh\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token Refreshed\");\r",
+									"});\r",
+									"pm.test(\"Token Returned\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).exist;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/refresh_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"refresh_token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Password Updates",
+			"item": [
+				{
+					"name": "Update Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Pwd Reset message\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Password has been updated.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_name\": \"Pyrowin\",\r\n    \"old_password\": \"P@ssw0rd\",\r\n    \"new_password\": \"N3w?password\",\r\n    \"new_password_retyped\": \"N3w?password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/update_password",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Pwd Reset message\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Password has been updated.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_name\": \"Pyrowin\",\r\n    \"old_password\": \"N3w?password\",\r\n    \"new_password\": \"P@ssw0rd\",\r\n    \"new_password_retyped\": \"P@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/update_password",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"pm.test(\"Pwd Reset message\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Not authorized\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_name\": \"Pyrowin!\",\r\n    \"old_password\": \"P@ssw0rd\",\r\n    \"new_password\": \"N3w?password\",\r\n    \"new_password_retyped\": \"N3w?password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/update_password",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Non Matching Passwords",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Pwds not equal\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"New Passwords do not match.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_name\": \"Pyrowin\",\r\n    \"old_password\": \"P@ssw0rd\",\r\n    \"new_password\": \"N3w?password\",\r\n    \"new_password_retyped\": \"N3w?password!!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/update_password",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incorrect Old Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"pm.test(\"Pwds not equal\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"User or Password is incorrect.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_name\": \"Pyrowin\",\r\n    \"old_password\": \"P@ssw0rd!\",\r\n    \"new_password\": \"N3w?password\",\r\n    \"new_password_retyped\": \"N3w?password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/update_password",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Not valid password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Pwds not equal\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Password must be between 8 and 32 characters and contain at least one of each of the following: uppercase letter, lowercase letter, number, and special character.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_name\": \"Pyrowin\",\r\n    \"old_password\": \"P@ssw0rd\",\r\n    \"new_password\": \"N3w?a\",\r\n    \"new_password_retyped\": \"N3w?a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/update_password",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update User",
+			"item": [
+				{
+					"name": "Update User (No JWT)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "user_name",
+									"value": "Harlak",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/update_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token and Extract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "N3w?password",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Rockwood",
+									"type": "text"
+								},
+								{
+									"key": "address_1",
+									"value": "270 Gails Road",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "address_2",
+									"value": "Seven Lakes",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "West End",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/update_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User (Too Young)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "2020-01-01",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/update_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User (Invalid Date)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "2020-01-32",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/update_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create User",
+			"item": [
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"User added\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text"
+								},
+								{
+									"key": "address_1",
+									"value": "522 Woodlake Drive",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "Fairfield",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "9102722347",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								},
+								{
+									"key": "password_confirm",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (duplicate data)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text"
+								},
+								{
+									"key": "address_1",
+									"value": "522 Woodlake Drive",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Fairfield",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "9102722347",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								},
+								{
+									"key": "password_confirm",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Missing first_name)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text"
+								},
+								{
+									"key": "address_1",
+									"value": "522 Woodlake Drive",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Fairfield",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "9102722347",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								},
+								{
+									"key": "password_confirm",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Missing last_name)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "address_1",
+									"value": "522 Woodlake Drive",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Fairfield",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "9102722347",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								},
+								{
+									"key": "password_confirm",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Missing date of birth)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text"
+								},
+								{
+									"key": "address_1",
+									"value": "522 Woodlake Drive",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Fairfield",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "9102722347",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								},
+								{
+									"key": "password_confirm",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Missing email)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text"
+								},
+								{
+									"key": "address_1",
+									"value": "522 Woodlake Drive",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Fairfield",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "9102722347",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								},
+								{
+									"key": "password_confirm",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Missing password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Amber",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text"
+								},
+								{
+									"key": "address_1",
+									"value": "522 Woodlake Drive",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Fairfield",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "USA",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "zip",
+									"value": "94534",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "9102722347",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password_confirm",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"User added\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "eric",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Edmund",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Burke",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ed@duck.co.uk",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "1967-08-25",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "B0urnemouth=",
+									"type": "text"
+								},
+								{
+									"key": "password_confirm",
+									"value": "B0urnemouth=",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/create_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Read User",
+			"item": [
+				{
+					"name": "Get Token and Extract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "Pyrowin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "N3w?password",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "Pyrowin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/read_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"read_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read User - Bad User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "bob\n\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/read_user",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"read_user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reset Forgotten Password",
+			"item": [
+				{
+					"name": "Email Confirmation Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/email_confirmation_code",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"email_confirmation_code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Forgotten Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "931149",
+									"type": "text"
+								},
+								{
+									"key": "new_password",
+									"value": "Lop12?asncbsgw",
+									"type": "text"
+								},
+								{
+									"key": "new_password_retyped",
+									"value": "Lop12?asncbsgw",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/update_forgotten_password",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"update_forgotten_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token with User Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "Pyrowin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Read Categories (Anonymous)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Seven items returned\", function () {\r",
+									"pm.expect(Object.keys(pm.response.json()).length).to.eql(7);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/lists/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token with Email for non admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_name",
+									"value": "Recipes",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/categories/create",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"categories",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Seven items returned\", function () {\r",
+									"pm.expect(Object.keys(pm.response.json()).length).to.eql(8);\r",
+									"});\r",
+									"\r",
+									"let jsonData = pm.response.json();\r",
+									"let recipeCategory = jsonData.find(category => category.category_name === \"Recipes\");\r",
+									"if (recipeCategory) {\r",
+									"    let recipeCategoryId = recipeCategory.category_id;\r",
+									"    \r",
+									"    // Set the value as an environment variable\r",
+									"    pm.collectionVariables.set(\"recipeCategoryId\", recipeCategoryId);\r",
+									"    console.log(\"Recipe category ID set to: \" + recipeCategoryId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/categories/delete/{{recipeCategoryId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"categories",
+								"delete",
+								"{{recipeCategoryId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ListHeaders",
+			"item": [
+				{
+					"name": "Get Token with Email for non admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Header",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_name",
+									"value": "Top 10 Tests again",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{\"Title\": \"String\", \"Artist\": \"String\", \"year\": \"int\"}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/create",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Header (Invalid Category)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_name",
+									"value": "Top 10 Tests",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "999",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{\"Title\": \"String\", \"Artist\": \"String\", \"year\": \"int\"}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/create",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Header (Invalid Category - different user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_created_by",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "list_name",
+									"value": "Top 10 Tests",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "9",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{\"Title\": \"String\", \"Artist\": \"String\", \"year\": \"int\"}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/create",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Header (Invalid definition)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_created_by",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "list_name",
+									"value": "Top 10 Tests",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "Not a dictionary",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/create",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Read Header",
+			"item": [
+				{
+					"name": "Get Token with Email for non admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Header(List belongs to a different user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/4",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Header(List does not exist)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/404",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"404"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Hello World",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Hello World!\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000",
+					"host": [
+						"localhost"
+					],
+					"port": "5000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Token with Email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Token provided\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.access_token).to.exist\r",
+							"});\r",
+							"pm.test(\"Refresh Token provided\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.refresh_token).to.exist\r",
+							"});\r",
+							"pm.test(\"Confirmation Message received\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test@test.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "P@ssw0rd",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:5000/get_token",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"get_token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Token fails due to bad password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"pm.test(\"Token not provided\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.access_token).to.not.exist\r",
+							"    pm.expect(jsonData.refresh_token).to.not.exist\r",
+							"});\r",
+							"pm.test(\"Confirmation Message received\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Bad user or password\")\r",
+							"});   "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test@test.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "wrong_password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:5000/get_token",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"get_token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Token fails due to bad user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"pm.test(\"Token not provided\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.access_token).to.not.exist\r",
+							"    pm.expect(jsonData.refresh_token).to.not.exist\r",
+							"});\r",
+							"pm.test(\"Confirmation Message received\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Bad user or password\")\r",
+							"});   "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "NoSuchUser\n",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "P@ssw0rd",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:5000/get_token",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"get_token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "AuthToken",
+			"value": ""
+		},
+		{
+			"key": "AccessToken",
+			"value": ""
+		},
+		{
+			"key": "recipeCategoryId",
+			"value": ""
+		}
+	]
+}

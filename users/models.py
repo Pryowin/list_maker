@@ -23,8 +23,9 @@ class User(db.Model):
     created_at = Column(DateTime,server_default=func.now(datetime.UTC))
     updated_at = Column(DateTime,onupdate=datetime.datetime.now(datetime.UTC))
     
-categories = relationship('Category', back_populates='category_creator')
-lists_created_by = relationship(User, back_populates='list_created_by')
+    categories = relationship('Category', back_populates='category_creator')
+    # lists_created_by = relationship('User', back_populates='list_creator')
+    lists_created_by = relationship('ListHeader', back_populates='list_creator', foreign_keys='ListHeader.list_created_by')
 
 required=('user_name', 'password', 'first_name', 'last_name', 'date_of_birth', 'email')
 unique=('user_name', 'email')

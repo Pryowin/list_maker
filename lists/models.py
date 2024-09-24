@@ -17,8 +17,8 @@ class Category(db.Model):
     created_at = Column(DateTime,server_default=func.now(datetime.UTC))
     updated_at = Column(DateTime,onupdate=datetime.datetime.now(datetime.UTC))
     
-category_creator = relationship(User, back_populates='created_by')
-lists_in_category = relationship('ListHeader', back_populates='list_category')
+    category_creator = relationship('User', back_populates='categories')
+    lists_in_category = relationship('ListHeader', back_populates='category')
 
 class ListHeader(db.Model):
     __tablename__ = 'list_headers'
@@ -30,10 +30,10 @@ class ListHeader(db.Model):
     created_at = Column(DateTime,server_default=func.now(datetime.UTC))
     updated_at = Column(DateTime,onupdate=datetime.datetime.now(datetime.UTC))
     
-list_creator = relationship(User, back_populates='list_created_by')
-category = relationship(Category, back_populates='list_category')
+    list_creator = relationship('User', back_populates='lists_created_by', foreign_keys=[list_created_by])
+    category = relationship('Category', back_populates='lists_in_category', foreign_keys=[list_category])
     
-lists = relationship('List_item', back_populates='list')
+    lists = relationship('ListItem', back_populates='list')
 
 class ListItem(db.Model):
     __tablename__ = 'list_items'
@@ -44,10 +44,19 @@ class ListItem(db.Model):
     created_at = Column(DateTime,server_default=func.now(datetime.UTC))
     updated_at = Column(DateTime,onupdate=datetime.datetime.now(datetime.UTC))
     
-list = relationship(ListHeader, back_populates='list_id')
+    list = relationship(ListHeader, back_populates='lists', foreign_keys=[list_id])
     
 class CategorySchema(ma.Schema):
     class Meta:
         fields = ('category_id','created_by','category_name')
         
 category_schema = CategorySchema(many=True)
+
+class ListHeaderSchema(ma.Schema):
+    class Meta:
+        fields = ('list_id', 'list_name', 'list_category','category_name','list_definition')
+
+    category_name = ma.String(attribute = 'category.category_name')
+    
+header_schema = ListHeaderSchema()
+headers_schema = ListHeaderSchema(many=True)
