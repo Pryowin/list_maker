@@ -794,36 +794,6 @@
 									"type": "text"
 								},
 								{
-									"key": "address_1",
-									"value": "522 Woodlake Drive",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "city",
-									"value": "Fairfield",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "country",
-									"value": "USA",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "state",
-									"value": "CA",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "zip",
-									"value": "94534",
-									"type": "text",
-									"disabled": true
-								},
-								{
 									"key": "date_of_birth",
 									"value": "1967-08-25",
 									"type": "text"
@@ -832,12 +802,6 @@
 									"key": "email",
 									"value": "amber@amberfire.net",
 									"type": "text"
-								},
-								{
-									"key": "phone",
-									"value": "9102722347",
-									"type": "text",
-									"disabled": true
 								},
 								{
 									"key": "password",
@@ -2128,7 +2092,7 @@
 							"formdata": [
 								{
 									"key": "list_name",
-									"value": "Top 10 Tests again",
+									"value": "Top 10 Tests",
 									"type": "text"
 								},
 								{
@@ -2139,6 +2103,98 @@
 								{
 									"key": "list_definition",
 									"value": "{\"Title\": \"String\", \"Artist\": \"String\", \"year\": \"int\"}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/create",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Another Header",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_name",
+									"value": "Another List",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{\"Title\": \"String\", \"Artist\": \"String\", \"year\": \"int\"}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/create",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Header with incorrect types in dictionary",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_name",
+									"value": "Another List",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{\"Title\": \"String\", \"Artist\": \"Notvalidtype\", \"year\": \"int\"}",
 									"type": "text"
 								}
 							]
@@ -2334,6 +2390,67 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Token with Email for other user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -2524,6 +2641,716 @@
 			]
 		},
 		{
+			"name": "Read Headers",
+			"item": [
+				{
+					"name": "Get Token with Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Headers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token with Email User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Headers (Empty List)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete Header",
+			"item": [
+				{
+					"name": "Get Token with Email for non admin Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Header",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/delete/3",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"delete",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token with Email for user 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Headerworng user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/delete/1",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update Header",
+			"item": [
+				{
+					"name": "Get Token with Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssw0rd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"definition\", jsonData.list_definition);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/lists/headers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update (Invalid Category)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "list_name",
+									"value": "Changed Name",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "999",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{{definition}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/update",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update (Invalid List)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_id",
+									"value": "999",
+									"type": "text"
+								},
+								{
+									"key": "list_name",
+									"value": "Changed Name",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{{definition}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/update",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token with Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Refresh Token provided\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.refresh_token).to.exist\r",
+									"});\r",
+									"pm.test(\"Confirmation Message received\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"AccessToken\", jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "amber@amberfire.net",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "W3st=end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/get_token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update wrong user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AccessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "list_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "list_name",
+									"value": "Changed Name",
+									"type": "text"
+								},
+								{
+									"key": "list_category",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "list_definition",
+									"value": "{{definition}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/lists/headers/update",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"lists",
+								"headers",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Hello World",
 			"event": [
 				{
@@ -2551,65 +3378,6 @@
 						"localhost"
 					],
 					"port": "5000"
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Token with Email",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"pm.test(\"Token provided\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.access_token).to.exist\r",
-							"});\r",
-							"pm.test(\"Refresh Token provided\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.refresh_token).to.exist\r",
-							"});\r",
-							"pm.test(\"Confirmation Message received\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.message).to.eql(\"Token provided\");\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "email",
-							"value": "test@test.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "P@ssw0rd",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "localhost:5000/get_token",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"get_token"
-					]
 				}
 			},
 			"response": []
@@ -2738,6 +3506,10 @@
 		},
 		{
 			"key": "recipeCategoryId",
+			"value": ""
+		},
+		{
+			"key": "definition",
 			"value": ""
 		}
 	]

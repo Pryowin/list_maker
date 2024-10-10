@@ -18,7 +18,7 @@ def is_list_definition_valid(list_definition: dict) -> bool:
         if data_typ not in VALID_TYPES:
             is_valid = False
         else:
-            if type == "String":
+            if data_typ == "String":
                 is_string_present = True
             
     if not is_string_present:

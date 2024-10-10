@@ -20,23 +20,23 @@ def create_header():
     current_user = get_jwt_identity()
     if not current_user:
         return jsonify(message = "Not authorized to create list."), NOT_AUTHORIZED
-        
+
     user = User.query.filter_by(email=current_user).first()
     if not user:
         return jsonify(message = "Not authorized to create list."), NOT_AUTHORIZED
-    
+
     list_created_by = user.user_id
     list_name = read_field_from_request(request, 'list_name')
     list_category = read_field_from_request(request, 'list_category')
     list_definition = read_field_from_request(request, 'list_definition')
-    
+
     if list_name is None:
         return jsonify(message = "List Name is a required field"), INCORRECT_DATA
-   
+
     check = validate_category(list_category, list_created_by)
     if not check["ok"]:
         return jsonify(message = check["message"]), check["return_code"]
-    
+
     check = validate_definition(list_definition)
     if not check["ok"]:
         return jsonify(message = check["message"]), check["return_code"]
@@ -50,6 +50,31 @@ def create_header():
     db.session.commit()
     return jsonify(message = "List Header Created"), RECORD_ADDED
 
+
+@header_api.route('/lists/headers/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_header(id):
+    """Route for deleting list header for specified list"""
+    current_user = get_jwt_identity()
+    if not current_user:
+        return jsonify(message = "Not authorized to delete list."), NOT_AUTHORIZED
+
+    user = User.query.filter_by(email=current_user).first()
+    if not user:    
+        return jsonify(message = "Not authorized to delete list."), NOT_AUTHORIZED
+    
+    user_id = user.user_id
+    list_header = ListHeader.query.options(joinedload(ListHeader.category)).filter_by(list_id = id).first()
+    if not list_header:
+        return jsonify(message = "List does not exist"), NOT_FOUND
+    
+    if user_id != list_header.list_created_by:
+        return jsonify(message = "Not authorized to delete list."), NOT_AUTHORIZED
+    
+    db.session.delete(list_header)
+    db.session.commit()
+    return jsonify(message = "List '"+ list_header.list_name +"' deleted"), OK
+    
 @header_api.route('/lists/headers/<int:id>', methods=['GET'])
 @jwt_required()
 def read_header(id):
@@ -69,7 +94,7 @@ def read_header(id):
     
     if user_id != list_header.list_created_by:
         return jsonify(message = "Not authorized to read list."), NOT_AUTHORIZED
-        
+       
     return jsonify(header_schema.dump(list_header)), OK
 
 
@@ -113,7 +138,7 @@ def update_header():
     if not list_header:
         return jsonify(message = "List not found"), NOT_FOUND
     
-    if list_header.created_by != user_id:
+    if list_header.list_created_by != user_id:
         return jsonify(message = "Not authorized to update list."), NOT_AUTHORIZED
     
     list_id = read_field_from_request(request, 'list_id')
