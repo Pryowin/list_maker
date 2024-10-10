@@ -9,6 +9,7 @@ from application.constants import RECORD_UPDATED
 from application.methods import read_field_from_request
 from lists.headers.validations import validate_category, validate_definition
 from lists.models import ListHeader, ListItem, header_schema, headers_schema
+from lists.headers.user import get_user
 from users.models import db, User
 
 header_api = Blueprint('header_api', __name__)
@@ -17,14 +18,10 @@ header_api = Blueprint('header_api', __name__)
 @jwt_required()
 def create_header():
     """Route for creating list header"""
-    current_user = get_jwt_identity()
-    if not current_user:
+    user = get_user()
+    if user == NOT_AUTHORIZED:
         return jsonify(message = "Not authorized to create list."), NOT_AUTHORIZED
-
-    user = User.query.filter_by(email=current_user).first()
-    if not user:
-        return jsonify(message = "Not authorized to create list."), NOT_AUTHORIZED
-
+    
     list_created_by = user.user_id
     list_name = read_field_from_request(request, 'list_name')
     list_category = read_field_from_request(request, 'list_category')
@@ -55,12 +52,8 @@ def create_header():
 @jwt_required()
 def delete_header(id):
     """Route for deleting list header for specified list"""
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsonify(message = "Not authorized to delete list."), NOT_AUTHORIZED
-
-    user = User.query.filter_by(email=current_user).first()
-    if not user:    
+    user = get_user()
+    if user == NOT_AUTHORIZED:
         return jsonify(message = "Not authorized to delete list."), NOT_AUTHORIZED
     
     user_id = user.user_id
@@ -79,12 +72,8 @@ def delete_header(id):
 @jwt_required()
 def read_header(id):
     """Route for reading list header for specified list"""
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsonify(message = "Not authorized to read list."), NOT_AUTHORIZED
-            
-    user = User.query.filter_by(email=current_user).first()
-    if not user:
+    user = get_user()
+    if user == NOT_AUTHORIZED:
         return jsonify(message = "Not authorized to read list."), NOT_AUTHORIZED
     
     user_id = user.user_id
@@ -102,13 +91,9 @@ def read_header(id):
 @jwt_required()  
 def read_headers():
     """Route for reading all list headers created by current user"""
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsonify(message = "Not authorized to read list."), NOT_AUTHORIZED
-            
-    user = User.query.filter_by(email=current_user).first()
-    if not user:
-        return jsonify(message = "Not authorized to read list."), NOT_AUTHORIZED
+    user = get_user()
+    if user == NOT_AUTHORIZED:
+        return jsonify(message = "Not authorized to read lists."), NOT_AUTHORIZED
     
     user_id = user.user_id
     lists = ListHeader.query.options(joinedload(ListHeader.category)).filter_by(list_created_by = user_id).all()
@@ -120,13 +105,9 @@ def read_headers():
 @jwt_required() 
 def update_header():
     """Route for updating list header"""
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsonify(message = "Not authorized to update list."), NOT_AUTHORIZED
-        
-    user = User.query.filter_by(email=current_user).first()
-    if not user:
-        return jsonify(message = "Not authorized to update list."), NOT_AUTHORIZED
+    user = get_user()
+    if user == NOT_AUTHORIZED:
+        return jsonify(message = "Not authorized to create list."), NOT_AUTHORIZED
     
     user_id = user.user_id
     list_category = read_field_from_request(request, 'list_category')
